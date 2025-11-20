@@ -29,3 +29,6 @@ export interface IProductFromResponse extends Required<IProduct>, ICreatedOn, ID
 export interface IProductResponse extends IResponseFields {
   Product: IProductFromResponse;
 }
+export interface IProductsResponse extends IResponseFields {
+  Products: IProductFromResponse[];
+}

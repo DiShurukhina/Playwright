@@ -1,8 +1,7 @@
-import test from "@playwright/test";
-import { loginAsAdmin } from "utils/loginAsAdmin.utils";
+import { test } from "fixtures/login.fixture";
 
 test.describe("Sales Portal Login", () => {
-  test("Test Login", async ({ page }) => {
-    await loginAsAdmin(page);
+  test("Test Login", async ({ loginAsAdmin }) => {
+    await loginAsAdmin();
   });
 });
