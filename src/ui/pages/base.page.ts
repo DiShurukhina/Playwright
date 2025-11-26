@@ -11,4 +11,12 @@ export abstract class BasePage {
   async waitForOpened() {
     await expect(this.uniqueElement).toBeVisible();
   }
+
+  async interceptRequest<T extends unknown[]>(url: string, triggerAction: (...args: T) => Promise<void>, ...args: T) {
+    const [request] = await Promise.all([
+      this.page.waitForRequest((request) => request.url().includes(url)),
+      triggerAction(...args),
+    ]);
+    return request;
+  }
 }

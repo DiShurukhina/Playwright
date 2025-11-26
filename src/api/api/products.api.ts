@@ -5,7 +5,7 @@ import {
   IGetProductsParams,
   IProduct,
   IProductResponse,
-  IProductSortedResponse,
+  IProductsSortedResponse,
   IProductsResponse,
 } from "data/salesPortal/types/product.types";
 import { convertRequestParams } from "utils/queryParams.utils";
@@ -96,6 +96,6 @@ export class ProductsApi {
         Authorization: `Bearer ${token}`,
       },
     };
-    return await this.apiClient.send<IProductSortedResponse>(options);
+    return await this.apiClient.send<IProductsSortedResponse>(options);
   }
 }

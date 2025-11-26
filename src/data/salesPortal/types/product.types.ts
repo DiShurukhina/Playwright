@@ -33,7 +33,7 @@ export interface IProductsResponse extends IResponseFields {
   Products: IProductFromResponse[];
 }
 
-export interface IProductSortedResponse extends IProductsResponse {
+export interface IProductsSortedResponse extends IProductsResponse {
   total: number;
   page: number;
   limit: number;
@@ -55,3 +55,5 @@ export interface IGetProductsParams {
   page: number;
   limit: number;
 }
+
+export type ProductsTableHeader = "Name" | "Price" | "Manufacturer" | "Created On";
