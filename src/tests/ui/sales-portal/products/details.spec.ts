@@ -1,9 +1,11 @@
 import { NOTIFICATIONS } from "data/salesPortal/notifications";
 import { generateProductData } from "data/salesPortal/products/generateProductData";
-import { test, expect } from "fixtures/login.fixture";
 import _ from "lodash";
+import { test, expect } from "fixtures";
 
 test.describe("[Sales Management Portal] [Products]", () => {
+  let id = "";
+  let token = "";
   const productData = generateProductData();
   test("Product Details", async ({loginAsAdmin, homePage, productsListPage, addNewProductPage }) => {
     await loginAsAdmin();
@@ -20,5 +22,26 @@ test.describe("[Sales Management Portal] [Products]", () => {
     await detailsModal.waitForOpened();
     const actual = await detailsModal.getData();
     expect(_.omit(actual, ["createdOn"])).toEqual(productData);
+  });
+
+  test("Product Details with services", async ({
+    loginUIService,
+    homeUIService,
+    productsListUIService,
+    productsApiService,
+    productsListPage,
+  }) => {
+    token = await loginUIService.loginAsAdmin();
+    const createdProduct = await productsApiService.create(token);
+    id = createdProduct._id;
+    await homeUIService.openModule("Products");
+    await productsListUIService.openDetailsModal(createdProduct.name);
+    const actual = await productsListPage.detailsModal.getData();
+    productsListUIService.assertDetailsData(actual, createdProduct);
+  });
+
+  test.afterEach(async ({ productsApiService }) => {
+    if (id) await productsApiService.delete(token, id);
+    id = "";
   });
 });

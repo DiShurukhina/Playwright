@@ -1,12 +1,13 @@
 import { expect, Locator, Page } from "@playwright/test";
 import { SALES_PORTAL_URL } from "config/env";
+import { IResponse } from "data/salesPortal/types/core.types";
 
 
 export abstract class BasePage {
   abstract readonly uniqueElement: Locator;
   constructor(protected page: Page) {}
-  async open() {
-    await this.page.goto(SALES_PORTAL_URL!);
+  async open(route?: string) {
+    await this.page.goto(SALES_PORTAL_URL! + route);
   }
   async waitForOpened() {
     await expect(this.uniqueElement).toBeVisible();
@@ -19,4 +20,17 @@ export abstract class BasePage {
     ]);
     return request;
   }
+
+  async interceptResponse<U extends object | null, T extends unknown[]>(
+    url: string, triggerAction: (...args: T) => Promise<void>, ...args: T): Promise<IResponse<U>> {
+      const [response] = await Promise.all ([
+        this.page.waitForResponse((response) => response.url().includes(url)),
+        triggerAction(...args),
+      ]);
+      return {
+        status: response.status(),
+        headers: response.headers(),
+        body: (await response.json()) as U,
+      };
+    }
 }
