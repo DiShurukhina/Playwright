@@ -1,5 +1,5 @@
+import { ICredentials } from "data/salesPortal/types/credentials.types";
 import { BasePage } from "./base.page";
-import { credentials } from "config/env";
 
 export class LoginPage extends BasePage {
   readonly emailInput = this.page.locator("#emailinput");
@@ -7,7 +7,7 @@ export class LoginPage extends BasePage {
   readonly loginButton = this.page.locator("button[type='submit']");
   readonly uniqueElement = this.page.locator('#signInPage');
 
-  async fillCredentials() {
+  async fillCredentials(credentials: ICredentials) {
     await this.emailInput.fill(credentials.username);
     await this.passwordInput.fill(credentials.password);
   }

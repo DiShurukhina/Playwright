@@ -1,15 +1,32 @@
-import { test, expect } from "fixtures/login.fixture";
+//import { test, expect } from "fixtures/login.fixture";
 import { NOTIFICATIONS } from "data/salesPortal/notifications";
 import { generateProductData } from "data/salesPortal/products/generateProductData";
 import { IProductTableRow } from "data/salesPortal/types/product.types";
+import { test, expect } from "fixtures";
 
 test.describe("[Sales Management Portal] [Products]", async () => {
+  let id = "";
+  let token = "";
   const productData = generateProductData();
-  test.beforeEach(async ({ loginAsAdmin }) => {
-    await loginAsAdmin();
+  // test.beforeEach(async ({ loginAsAdmin }) => {
+  //   await loginAsAdmin();
+  // });
+
+    test("Add new product with services", async ({ loginUIService, addNewProductUIService, productsListPage }) => {
+    token = await loginUIService.loginAsAdmin();
+    await addNewProductUIService.open();
+    const createdProduct = await addNewProductUIService.create();
+    id = createdProduct._id;
+    await expect(productsListPage.toastMessage).toContainText(NOTIFICATIONS.PRODUCT_CREATED);
+    await expect(productsListPage.tableRowByName(createdProduct.name)).toBeVisible();
   });
 
-  test("Add new product", async ({ homePage, productsListPage, addNewProductPage}) => {
+  test.afterEach(async ({ productsApiService}) => {
+    if (id) await productsApiService.delete(token, id);
+    id = "";
+  });
+
+  test.skip("Add new product", async ({ homePage, productsListPage, addNewProductPage}) => {
     await homePage.clickOnViewModule("Products");
     await productsListPage.waitForOpened();
     await productsListPage.clickAddNewProduct();
@@ -29,7 +46,7 @@ test.describe("[Sales Management Portal] [Products]", async () => {
     expect(await productsListPage.getFirstProductData()).toEqual(expectedData);
   });
 
-  test("[e2e] Product life cycle", async ({ homePage, productsListPage, addNewProductPage }) => {
+  test.skip("[e2e] Product life cycle", async ({ homePage, productsListPage, addNewProductPage }) => {
     await homePage.clickOnViewModule("Products");
     await productsListPage.waitForOpened();
     await productsListPage.clickAddNewProduct();

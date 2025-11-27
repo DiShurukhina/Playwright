@@ -2,11 +2,13 @@ import { IProductInTable, IProductTableRow, ProductsTableHeader } from "data/sal
 import { SalesPortalPage } from "../salesPortal.page";
 import { MANUFACTURERS } from "data/salesPortal/products/manufacturers";
 import { ProductDetailsModal } from "./details.modal";
-import { ProductDeleteModal } from "./delete.modal";
+import { ConfirmationModal } from "../confirmation.modal";
 
 export class ProductsListPage extends SalesPortalPage {
   readonly detailsModal = new ProductDetailsModal(this.page);
-  readonly deleteModal = new ProductDeleteModal(this.page);
+  readonly deleteModal = new ConfirmationModal(this.page);
+
+
   readonly productPageTitle = this.page.locator("h2.fw-bold");
   readonly addNewProductButton = this.page.locator('[name="add-button"]');
   readonly tableRow = this.page.locator("tbody tr");
@@ -30,7 +32,11 @@ export class ProductsListPage extends SalesPortalPage {
   readonly editButton = (productName: string) => this.tableRowByName(productName).getByTitle("Edit");
   readonly detailsButton = (productName: string) => this.tableRowByName(productName).getByTitle("Details");
   readonly deleteButton = (productName: string) => this.tableRowByName(productName).getByTitle("Delete");
+
   readonly uniqueElement = this.addNewProductButton;
+
+  readonly searchInput = this.page.locator("#search");
+  readonly searchButton = this.page.locator("#search-products");
 
   async clickAddNewProduct() {
     await this.addNewProductButton.click();
@@ -70,5 +76,13 @@ export class ProductsListPage extends SalesPortalPage {
 
   async clickTableHeader(name: ProductsTableHeader) {
     await this.tableHeaderNamed(name).click();
+  }
+
+  async fillSearchInput(text: string) {
+    await this.searchInput.fill(text);
+  }
+
+  async clickSearch() {
+    await this.searchButton.click();
   }
 }
