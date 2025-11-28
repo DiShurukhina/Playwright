@@ -8,8 +8,8 @@ export class LoginPage extends BasePage {
   readonly uniqueElement = this.page.locator('#signInPage');
 
   async fillCredentials(credentials: ICredentials) {
-    await this.emailInput.fill(credentials.username);
-    await this.passwordInput.fill(credentials.password);
+    if (credentials.username) await this.emailInput.fill(credentials.username);
+    if (credentials.password) await this.passwordInput.fill(credentials.password);
   }
 
   async clickLogin() {
