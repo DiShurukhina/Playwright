@@ -1,39 +1,21 @@
-import { NOTIFICATIONS } from "data/salesPortal/notifications";
-import { generateProductData } from "data/salesPortal/products/generateProductData";
 import _ from "lodash";
-import { test, expect } from "fixtures";
+import { test } from "fixtures";
+import { TAGS } from "data/salesPortal/tags";
 
 test.describe("[Sales Management Portal] [Products]", () => {
   let id = "";
   let token = "";
-  const productData = generateProductData();
-  test("Product Details", async ({loginAsAdmin, homePage, productsListPage, addNewProductPage }) => {
-    await loginAsAdmin();
-    await homePage.clickOnViewModule("Products");
-    await productsListPage.waitForOpened();
-    await productsListPage.clickAddNewProduct();
-    await addNewProductPage.fillForm(productData);
-    await addNewProductPage.clickSave();
-    await productsListPage.waitForOpened();
-    await expect(productsListPage.toastMessage).toContainText(NOTIFICATIONS.PRODUCT_CREATED);
-    await expect(productsListPage.tableRowByName(productData.name)).toBeVisible();
-    await productsListPage.detailsButton(productData.name).click();
-    const { detailsModal } = productsListPage;
-    await detailsModal.waitForOpened();
-    const actual = await detailsModal.getData();
-    expect(_.omit(actual, ["createdOn"])).toEqual(productData);
-  });
 
-  test("Product Details with services", async ({
-    loginUIService,
+  test("Product Details with services", {tag: [TAGS.UI, TAGS.SMOKE, TAGS.REGRESSION, TAGS.PRODUCTS],}, async ({
     homeUIService,
     productsListUIService,
     productsApiService,
     productsListPage,
   }) => {
-    token = await loginUIService.loginAsAdmin();
+    token = await productsListPage.getAuthToken();
     const createdProduct = await productsApiService.create(token);
     id = createdProduct._id;
+    await homeUIService.homePage.open();
     await homeUIService.openModule("Products");
     await productsListUIService.openDetailsModal(createdProduct.name);
     const actual = await productsListPage.detailsModal.getData();

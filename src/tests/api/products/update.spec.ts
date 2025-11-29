@@ -7,6 +7,7 @@ import { validateResponse } from "utils/validation/validateResponse.utils";
 import { errorSchema } from "data/salesPortal/schemas/core.schema";
 import { ERROR_MESSAGES } from "data/salesPortal/notifications";
 import { MANUFACTURERS } from "data/salesPortal/products/manufacturers";
+import { TAGS } from "data/salesPortal/tags";
 
 test.describe("[API] [Sales Portal] [Products]", () => {
   test.describe("Smoke", () => {
@@ -22,7 +23,7 @@ test.describe("[API] [Sales Portal] [Products]", () => {
       }
   });
 
-  test("Update product", async ({ loginApiService, productsApiService, productsApi }) => {
+  test("Update product", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ loginApiService, productsApiService, productsApi }) => {
     //TODO: Preconditions
     token = await loginApiService.loginAsAdmin();
     const createdProduct = await productsApiService.create(token);
@@ -62,7 +63,7 @@ test.describe("NOT SMOKE", () => {
       }
     });
 
-    test("Should NOT update product without token", async ({ productsApi, productsApiService }) => {
+    test("Should NOT update product without token", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApi, productsApiService }) => {
       const product = await productsApiService.create(token);
       ids.push(product._id);
 
@@ -75,7 +76,7 @@ test.describe("NOT SMOKE", () => {
       });
 });
 
-test("Should NOT update product with not existing id", async ({ productsApi }) => {
+test("Should NOT update product with not existing id", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApi }) => {
       const id = "690a3cfbef33a32d75a96737";
       const response = await productsApi.update(id, generateProductData(), token);
       validateResponse(response, {
@@ -86,7 +87,7 @@ test("Should NOT update product with not existing id", async ({ productsApi }) =
       });
     });
 
-    test("Should NOT update product with existing product name", async ({ productsApi, productsApiService }) => {
+    test("Should NOT update product with existing product name", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApi, productsApiService }) => {
       const product1 = await productsApiService.create(token);
       const product2 = await productsApiService.create(token);
 
@@ -101,7 +102,7 @@ test("Should NOT update product with not existing id", async ({ productsApi }) =
       });
     });
 
-    test("Should update product with max valid data", async ({ productsApi, productsApiService }) => {
+    test("Should update product with max valid data", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApi, productsApiService }) => {
       const product = await productsApiService.create(token);
       ids.push(product._id);
       const productData = {
@@ -123,7 +124,7 @@ test("Should NOT update product with not existing id", async ({ productsApi }) =
       expect(_.omit(response.body.Product, ["_id", "createdOn"])).toEqual(productData);
     });
 
-    test("Should update product with min valid data", async ({ productsApi, productsApiService }) => {
+    test("Should update product with min valid data", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApi, productsApiService }) => {
       const product = await productsApiService.create(token);
       ids.push(product._id);
       const productData = {

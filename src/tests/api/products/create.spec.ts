@@ -6,6 +6,7 @@ import _ from "lodash";
 import { validateResponse } from "utils/validation/validateResponse.utils";
 import { IProduct } from "data/salesPortal/types/product.types";
 import { positiveCases, negativeCases } from "data/salesPortal/products/createProductCases";
+import { TAGS } from "data/salesPortal/tags";
 
 
 test.describe("[API] [Sales Portal] [Products]", () => {
@@ -16,7 +17,7 @@ test.describe("[API] [Sales Portal] [Products]", () => {
     if (id) await productsApiService.delete(token, id);
   });
 
-  test("Create product", async ({ loginApiService, productsApi }) => {
+  test("Create product", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]},  async ({ loginApiService, productsApi }) => {
     token = await loginApiService.loginAsAdmin();
     const productData = generateProductData();
     const createdProduct = await productsApi.create(productData, token);
@@ -34,7 +35,7 @@ test.describe("[API] [Sales Portal] [Products]", () => {
   });
 
   for(const {testName, productData} of positiveCases) {
-    test(testName, async ({ loginApiService, productsApi }) => {
+    test(testName, {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ loginApiService, productsApi }) => {
     token = await loginApiService.loginAsAdmin();
     const createdProduct = await productsApi.create(productData, token);
     validateResponse(createdProduct, {
@@ -54,7 +55,7 @@ test.describe("[API] [Sales Portal] [Products]", () => {
 
   test.describe("[API] [Sales Portal] [Negative cases]", () => {
   for(const {testName, productData} of negativeCases) {
-    test(testName, async ({ loginApiService, productsApi }) => {
+    test(testName, {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ loginApiService, productsApi }) => {
     let token = await loginApiService.loginAsAdmin();
     const createdProduct = await productsApi.create(productData as IProduct, token);
     validateResponse(createdProduct, {

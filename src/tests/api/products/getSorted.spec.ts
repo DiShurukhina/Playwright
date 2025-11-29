@@ -1,4 +1,5 @@
 import { STATUS_CODES } from "data/salesPortal/statusCodes";
+import { TAGS } from "data/salesPortal/tags";
 import { test, expect } from "fixtures/api.fixture";
 import { validateResponse } from "utils/validation/validateResponse.utils";
 
@@ -15,9 +16,8 @@ test.describe("[API] [Sales Portal] [Products] Get Sorted", () => {
       id = "";
     });
 
-    test("Search by name", async ({ productsApiService, productsApi }) => {
+    test("Search by name", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApiService, productsApi }) => {
         const product = await productsApiService.create(token);
-
         const response = await productsApi.getSorted(token, {search: product.name});
         validateResponse(response, {
         status: STATUS_CODES.OK,
@@ -35,7 +35,7 @@ test.describe("[API] [Sales Portal] [Products] Get Sorted", () => {
       expect.soft(total).toBeGreaterThanOrEqual(1);
     });
 
-    test("Search by price", async ({ productsApiService, productsApi }) => {
+    test("Search by price", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApiService, productsApi }) => {
       const product = await productsApiService.create(token);
 
       const response = await productsApi.getSorted(token, { search: product.price.toString() });
@@ -56,7 +56,7 @@ test.describe("[API] [Sales Portal] [Products] Get Sorted", () => {
       expect.soft(total).toBeGreaterThanOrEqual(1);
     });
 
-    test("Search by manufacturer", async ({ productsApiService, productsApi }) => {
+    test("Search by manufacturer", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ productsApiService, productsApi }) => {
       const product = await productsApiService.create(token);
 
       const response = await productsApi.getSorted(token, { search: product.manufacturer });
@@ -94,7 +94,7 @@ test.describe("[API] [Sales Portal] [Products] Get Sorted", () => {
       }
     });
 
-    test("SortField: createdOn, sortOrder: asc", async ({ productsApiService, productsApi, page }) => {
+    test("SortField: createdOn, sortOrder: asc", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION]}, async ({ productsApiService, productsApi, page }) => {
       const product1 = await productsApiService.create(token);
       await page.waitForTimeout(1000);
       const product2 = await productsApiService.create(token);
@@ -131,7 +131,7 @@ test.describe("[API] [Sales Portal] [Products] Get Sorted", () => {
       expect.soft(total).toBeGreaterThanOrEqual(2);
     });
 
-    test("SortField: createdOn, sortOrder: desc", async ({ productsApiService, productsApi, page }) => {
+    test("SortField: createdOn, sortOrder: desc", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION]}, async ({ productsApiService, productsApi, page }) => {
       const product1 = await productsApiService.create(token);
       await page.waitForTimeout(1000);
       const product2 = await productsApiService.create(token);
@@ -168,7 +168,7 @@ test.describe("[API] [Sales Portal] [Products] Get Sorted", () => {
       expect.soft(total).toBeGreaterThanOrEqual(2);
     });
 
-    test("SortField: manufacturer, sortOrder: desc", async ({ productsApiService, productsApi, page }) => {
+    test("SortField: manufacturer, sortOrder: desc", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION]}, async ({ productsApiService, productsApi, page }) => {
       const product1 = await productsApiService.create(token);
       await page.waitForTimeout(1000);
       const product2 = await productsApiService.create(token);

@@ -1,4 +1,4 @@
-import { APIRequestContext, APIResponse } from "@playwright/test";
+import { APIRequestContext, APIResponse, test } from "@playwright/test";
 import { BaseApiClient } from "./baseApiClient";
 import { IRequestOptions, IResponse } from "data/salesPortal/types/core.types";
 import _ from "lodash";
@@ -8,18 +8,20 @@ export class RequestApi extends BaseApiClient {
     super();
   }
   private response: APIResponse | undefined;
+  private testInfo = test.info;
 
-  async send<T extends object | null>(
-    options: IRequestOptions
-  ): Promise<IResponse<T>> {
+  async send<T extends object | null>(options: IRequestOptions): Promise<IResponse<T>> {
     try {
       const url = options.baseURL + options.url;
       const fetchOptions = _.omit(options, ["baseURL", "url"]);
+      await this.attachRequest(options);
       this.response = await this.requestContext.fetch(url, fetchOptions);
 
       if (this.response.status() >= 500)
         throw new Error("Request failed with status " + this.response.status());
-      return await this.transformResponse();
+      const result = await this.transformResponse();
+      await this.attachResponse(options, result);
+      return result;
     } catch (err) {
       console.log((err as Error).message);
       throw err;
@@ -40,5 +42,33 @@ export class RequestApi extends BaseApiClient {
       body,
       headers: this.response!.headers(),
     };
+  }
+
+  private async attachRequest(options: IRequestOptions) {
+    await this.testInfo().attach(`Request ${options.method.toUpperCase()} ${options.url}`, {
+      body: JSON.stringify(
+        {
+          headers: options.headers,
+          body: options.data,
+        },
+        null,
+        2,
+      ),
+      contentType: "application/json",
+    });
+  }
+
+  private async attachResponse<T extends object | null>(options: IRequestOptions, response: IResponse<T>) {
+    await this.testInfo().attach(`Response ${response.status} ${options.method.toUpperCase()} ${options.url}`, {
+      body: JSON.stringify(
+        {
+          headers: response.headers,
+          body: response.body,
+        },
+        null,
+        2,
+      ),
+      contentType: "application/json",
+    });
   }
 }

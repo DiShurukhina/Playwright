@@ -3,11 +3,13 @@ import { generateCustomerData } from "data/salesPortal/customers/generateCustome
 import { createCustomerSchema } from "data/salesPortal/schemas/customers/create.schema";
 import { STATUS_CODES } from "data/salesPortal/statusCodes";
 import { ICustomer } from "data/salesPortal/types/customer.types";
+import { logStep } from "utils/reports/logStep.utils";
 import { validateResponse } from "utils/validation/validateResponse.utils";
 
 export class CustomersApiService {
     constructor(private customersApi: CustomersApi) {}
 
+    @logStep("Create customer via API")
     async create(token: string, customerData?: Partial<ICustomer>) {
         const data = generateCustomerData(customerData);
         const response = await this.customersApi.create(data, token);
@@ -20,6 +22,7 @@ export class CustomersApiService {
         return response.body.Customer;
       }
     
+      @logStep("Delete customer via API")
       async delete(token: string, id: string) {
         const response = await this.customersApi.delete(id, token);
         validateResponse(response, {

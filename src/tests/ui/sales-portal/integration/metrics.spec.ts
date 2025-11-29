@@ -2,13 +2,13 @@ import { metricsCases, mockedMetricsData } from "data/salesPortal/metrics/metric
 import { test, expect } from "fixtures";
 
 test.describe("[Integration] [Home] [Metrics]", () => {
-    test.beforeEach(async ({ loginAsAdmin, mock, homePage }) => {
+    test.beforeEach(async ({ mock, homePage }) => {
         await mock.metrics({
             Metrics: mockedMetricsData,
             IsSuccess: true,
             ErrorMessage: null
         });
-        await loginAsAdmin();
+        await homePage.open();
         await homePage.waitForOpened();
     });
 

@@ -1,19 +1,19 @@
 //import { test, expect } from "fixtures/login.fixture";
 import { NOTIFICATIONS } from "data/salesPortal/notifications";
 import { generateProductData } from "data/salesPortal/products/generateProductData";
+import { TAGS } from "data/salesPortal/tags";
 import { IProductTableRow } from "data/salesPortal/types/product.types";
 import { test, expect } from "fixtures";
+
 
 test.describe("[Sales Management Portal] [Products]", async () => {
   let id = "";
   let token = "";
   const productData = generateProductData();
-  // test.beforeEach(async ({ loginAsAdmin }) => {
-  //   await loginAsAdmin();
-  // });
 
-    test("Add new product with services", async ({ loginUIService, addNewProductUIService, productsListPage }) => {
-    token = await loginUIService.loginAsAdmin();
+    test("Add new product with services", {tag: [TAGS.UI, TAGS.SMOKE, TAGS.REGRESSION, TAGS.PRODUCTS],},
+    async ({ addNewProductUIService, productsListPage }) => {
+    token = await productsListPage.getAuthToken();
     await addNewProductUIService.open();
     const createdProduct = await addNewProductUIService.create();
     id = createdProduct._id;
@@ -26,7 +26,7 @@ test.describe("[Sales Management Portal] [Products]", async () => {
     id = "";
   });
 
-  test.skip("Add new product", async ({ homePage, productsListPage, addNewProductPage}) => {
+  test.skip("Add new product", {tag: [TAGS.UI, TAGS.SMOKE, TAGS.REGRESSION, TAGS.PRODUCTS],}, async ({ homePage, productsListPage, addNewProductPage}) => {
     await homePage.clickOnViewModule("Products");
     await productsListPage.waitForOpened();
     await productsListPage.clickAddNewProduct();
@@ -46,7 +46,7 @@ test.describe("[Sales Management Portal] [Products]", async () => {
     expect(await productsListPage.getFirstProductData()).toEqual(expectedData);
   });
 
-  test.skip("[e2e] Product life cycle", async ({ homePage, productsListPage, addNewProductPage }) => {
+  test.skip("[e2e] Product life cycle", {tag: [TAGS.E2E, TAGS.UI, TAGS.SMOKE, TAGS.REGRESSION, TAGS.PRODUCTS],}, async ({ homePage, productsListPage, addNewProductPage }) => {
     await homePage.clickOnViewModule("Products");
     await productsListPage.waitForOpened();
     await productsListPage.clickAddNewProduct();
