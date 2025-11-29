@@ -17,8 +17,11 @@ export class LoginUIService {
         await this.loginPage.open();
         await this.loginPage.fillCredentials(credentials);
         await this.loginPage.clickLogin();
-        await this. loginPage.waitForOpened();
+        await this.homePage.waitForOpened();
+
+        
         const token = (await this.page.context().cookies()).find((c) => c.name === "Authorization")!.value;
+        console.log(token);
         return token;
     }
 

@@ -1,5 +1,5 @@
 import { MANUFACTURERS } from "data/salesPortal/products/manufacturers";
-import { ID, IResponseFields, SortOrder } from "./core.types";
+import { ICreatedOn, ID, IResponseFields, SortOrder } from "./core.types";
 
 export interface IProduct {
   name: string;
@@ -13,11 +13,6 @@ export interface IProductTableRow {
   name: string;
   price: string;
   manufacturer: MANUFACTURERS;
-}
-
-
-export interface ICreatedOn {
-  createdOn: string;
 }
 
 export interface IProductInTable extends Pick<IProduct, "name" | "manufacturer" | "price">, ICreatedOn {}

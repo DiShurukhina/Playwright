@@ -68,6 +68,16 @@ export class ProductsListPage extends SalesPortalPage {
     return data;
   }
 
+  async getProductData(productName: string): Promise<IProductInTable> {
+    const [name, price, manufacturer, createdOn] = await this.tableRowByName(productName).locator("td").allInnerTexts();
+    return {
+      name: name!,
+      price: +price!.replace("$", ""),
+      manufacturer: manufacturer! as MANUFACTURERS,
+      createdOn: createdOn!,
+    };
+  }
+
   async clickAction(productName: string, button: "edit" | "delete" | "details") {
     if(button === "edit") await this.editButton(productName).click();
     if (button === "delete") await this.deleteButton(productName).click();

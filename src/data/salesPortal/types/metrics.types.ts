@@ -1,4 +1,5 @@
 import { IResponseFields } from "./core.types";
+import { ICustomer } from "./customer.types";
 import { IProduct } from "./product.types";
 
 export interface IMetricsResponse extends IResponseFields{
@@ -46,19 +47,7 @@ export interface IOrderDate {
 }
 
 // CUSTOMERS
-export interface ICustomer {
-    _id: string;
-    email: string;
-    name: string;
-    country: string;
-    city: string;
-    street: string;
-    house: number;
-    flat: number;
-    phone: string;
-    createdOn: string;
-    notes: string;
-}
+
 
 export interface ICustomersMetrics {
     totalNewCustomers: number;
