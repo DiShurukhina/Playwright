@@ -3,6 +3,7 @@ import { getAllProductsResponseSchema } from "data/salesPortal/schemas/products/
 import { STATUS_CODES } from "data/salesPortal/statusCodes";
 import _ from "lodash";
 import { validateResponse } from "utils/validation/validateResponse.utils";
+import { TAGS } from "data/salesPortal/tags";
 
 test.describe("[API] [SalesPortal] [Products]", () => {
   let id = "";
@@ -12,7 +13,7 @@ test.describe("[API] [SalesPortal] [Products]", () => {
     await productsApiService.delete(token, id);
   });
 
-  test("Get all products without sorting", async ({ loginApiService, productsApiService, productsApi }) => {
+  test("Get all products without sorting", {tag: [TAGS.API, TAGS.PRODUCTS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ loginApiService, productsApiService, productsApi }) => {
     //TODO: Preconditions
     token = await loginApiService.loginAsAdmin();
     const createdProduct = await productsApiService.create(token);

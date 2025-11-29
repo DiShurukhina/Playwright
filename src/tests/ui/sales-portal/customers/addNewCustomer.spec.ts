@@ -1,4 +1,5 @@
 import { NOTIFICATIONS } from "data/salesPortal/notifications";
+import { TAGS } from "data/salesPortal/tags";
 import { test, expect } from "fixtures";
 
 test.describe("[Sales Portal] [Customers]", async() => {
@@ -10,8 +11,8 @@ test.describe("[Sales Portal] [Customers]", async() => {
     id = "";
   });
 
-    test("Create new customer with services", async ({ loginUIService, addNewCustomerUIService, customersListPage }) => {
-        token = await loginUIService.loginAsAdmin();
+    test("Create new customer with services", {tag: [TAGS.UI, TAGS.CUSTOMERS, TAGS.REGRESSION, TAGS.SMOKE]}, async ({ addNewCustomerUIService, customersListPage }) => {
+        token = await customersListPage.getAuthToken();
         await addNewCustomerUIService.open();
         const createdCustomer = await addNewCustomerUIService.create()
         id = createdCustomer._id;

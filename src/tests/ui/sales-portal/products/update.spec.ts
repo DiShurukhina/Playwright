@@ -1,5 +1,6 @@
 import { NOTIFICATIONS } from "data/salesPortal/notifications";
 import { generateProductData } from "data/salesPortal/products/generateProductData";
+import { TAGS } from "data/salesPortal/tags";
 import { test, expect } from "fixtures";
 import _ from "lodash";
 
@@ -7,14 +8,13 @@ test.describe("[e2e] [Sales Portal] [Products]", () => {
   let id = "";
   let token = "";
 
-  test("Update product with services", async ({
-    loginUIService,
+  test("Update product with services", {tag: [TAGS.UI, TAGS.SMOKE, TAGS.REGRESSION, TAGS.PRODUCTS],}, async ({
     productsApiService,
     productsListUIService,
     productsListPage,
     editProductPage
   }) => {
-    token = await loginUIService.loginAsAdmin();
+    token = await productsListPage.getAuthToken();
     const createdProduct = await productsApiService.create(token);
     id = createdProduct._id;
 
@@ -42,7 +42,6 @@ test.describe("[e2e] [Sales Portal] [Products]", () => {
     );
 
     await productsListUIService.openDetailsModal(updatedProductData.name);
-    //await productsListPage.clickAction(updatedProductData.name, "details");
     await productsListPage.detailsModal.waitForOpened();
     const actualDetails = _.omit(
       await productsListPage.detailsModal.getData(),

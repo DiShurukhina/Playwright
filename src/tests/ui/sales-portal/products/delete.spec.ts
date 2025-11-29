@@ -1,12 +1,14 @@
 import { NOTIFICATIONS } from "data/salesPortal/notifications";
 import { STATUS_CODES } from "data/salesPortal/statusCodes";
+import { TAGS } from "data/salesPortal/tags";
 import { test, expect } from "fixtures";
 
 
 test.describe("[Sales Portal] [Products]", () => {
-    test("Delete", async ({ loginUIService, productsListUIService, homeUIService, productsApiService, productsListPage, productsApi}) => {
-        const token = await loginUIService.loginAsAdmin();
+    test("Delete", {tag: [TAGS.UI, TAGS.SMOKE, TAGS.REGRESSION, TAGS.PRODUCTS],}, async ({ productsListUIService, homeUIService, productsApiService, productsListPage, productsApi}) => {
+        const token = await productsListPage.getAuthToken();
         const createdProduct = await productsApiService.create(token);
+        await homeUIService.homePage.open();
         await homeUIService.openModule("Products");
         await productsListUIService.deleteProduct(createdProduct.name);
         const deleted = await productsApi.getById(createdProduct._id, token);
